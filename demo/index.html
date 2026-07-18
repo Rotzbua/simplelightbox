@@ -26,7 +26,18 @@
 				</nav>
 			</div>
 			<div class="small-demo">
-				<a href="img/full/01.jpg"><img src="img/thumb/01.jpg" title="Drone Photography" alt=""></a>
+				<a href="img/full/01.jpg">
+					<template>
+						<picture>
+							<source srcset="img/full/02.jpg.webp">
+							<img src="img/thumb/02.jpg">
+						</picture>
+					</template>
+					<picture>
+						<source srcset="img/full/01.jpg.webp">
+						<img src="img/thumb/01.jpg" title="Drone Photography1" alt="">
+					</picture>
+				</a>
 				<a rel="rel2" href="img/full/02.jpg"><img src="img/thumb/02.jpg" alt=""></a>
 				<a rel="rel3" href="img/full/03.jpg"><img src="img/thumb/03.jpg" alt=""></a>
 				<a rel="rel2" href="img/full/04.jpg"><img src="img/thumb/04.jpg" alt=""></a>
