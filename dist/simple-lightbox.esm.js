@@ -816,7 +816,7 @@ class SimpleLightbox {
                 let scrollTopPos = document.documentElement.scrollTop || document.body.scrollTop;
 
                 this.controlCoordinates.pinchOffsetX = event.pageX;
-                this.controlCoordinates.pinchOffsetY = event.pageY - scrollTopPos || 0; // need to substract the scroll position
+                this.controlCoordinates.pinchOffsetY = event.pageY - scrollTopPos || 0; // need to subtract the scroll position
 
                 this.controlCoordinates.limitOffsetX = ((this.controlCoordinates.imgWidth * this.controlCoordinates.targetScale) - this.controlCoordinates.containerWidth) / 2;
                 this.controlCoordinates.limitOffsetY = ((this.controlCoordinates.imgHeight * this.controlCoordinates.targetScale) - this.controlCoordinates.containerHeight) / 2;
@@ -1524,12 +1524,17 @@ class SimpleLightbox {
     }
 
     // get some useful data
-    getLighboxData() {
+    getLightboxData() {
         return {
             currentImageIndex: this.currentImageIndex,
             currentImage: this.currentImage,
             globalScrollbarWidth: this.globalScrollbarWidth
         };
+    }
+
+    // @deprecated replace with `getLightboxData()`
+    getLighboxData() {
+        return this.getLightboxData();
     }
 
     //close is exposed anyways..
