@@ -150,10 +150,10 @@ class SimpleLightbox {
         }
 
         if (this.options.uniqueImages) {
-            let imgArr = [];
+            const imgArr = [];
             this.elements = Array.from(this.elements).filter(
                 element => {
-                    let src = element.getAttribute(this.options.sourceAttr);
+                    const src = element.getAttribute(this.options.sourceAttr);
                     if(imgArr.indexOf(src) === -1) {
                         imgArr.push(src);
                         return true;
@@ -241,13 +241,15 @@ class SimpleLightbox {
         // Test via a getter in the options object to see if the passive property is accessed
         let supportsPassive = false;
         try {
-            let opts = Object.defineProperty({}, 'passive', {
+            const opts = Object.defineProperty({}, 'passive', {
+                // eslint-disable-next-line getter-return
                 get: function() {
                     supportsPassive = true;
                 }
             });
             window.addEventListener("testPassive", null, opts);
             window.removeEventListener("testPassive", null, opts);
+            // eslint-disable-next-line no-unused-vars, no-empty
         } catch (e) {}
         return supportsPassive;
     }
@@ -255,15 +257,15 @@ class SimpleLightbox {
     getCaptionElement(elem) {
         // look at sibling selector
         if( this.options.captionSelector.startsWith('+')) {
-            let selector = this.options.captionSelector.replace(/^\+/, '').trimStart();
-            let sibling = elem.nextElementSibling;
+            const selector = this.options.captionSelector.replace(/^\+/, '').trimStart();
+            const sibling = elem.nextElementSibling;
             if(sibling && sibling.matches(selector)) {
                 return sibling;
             }
             return false;
         }
         else if( this.options.captionSelector.startsWith('>') ) {
-            let selector = this.options.captionSelector.replace(/^>/, '').trimStart();
+            const selector = this.options.captionSelector.replace(/^>/, '').trimStart();
             return elem.querySelector(selector);
         }
         else {
@@ -336,7 +338,7 @@ class SimpleLightbox {
         this.domNodes.caption = document.createElement('div');
         this.domNodes.caption.classList.add('sl-caption', 'pos-' + this.options.captionPosition);
         if (this.options.captionClass) {
-            let captionClasses = this.options.captionClass.split(/[\s,]+/);
+            const captionClasses = this.options.captionClass.split(/[\s,]+/);
             this.domNodes.caption.classList.add(...captionClasses);
         }
 
@@ -374,7 +376,7 @@ class SimpleLightbox {
     }
 
     calculateTransitionPrefix() {
-        let s = (document.body || document.documentElement).style;
+        const s = (document.body || document.documentElement).style;
 
         return 'transition' in s ? '' :
             'WebkitTransition' in s ? '-webkit-' :
@@ -385,7 +387,7 @@ class SimpleLightbox {
 
     getScrollbarWidth() {
         let scrollbarWidth = 0;
-        let scrollDiv = document.createElement('div');
+        const scrollDiv = document.createElement('div');
         scrollDiv.classList.add('sl-scrollbar-measure');
 
         document.body.appendChild(scrollDiv);
@@ -396,15 +398,15 @@ class SimpleLightbox {
 
     toggleScrollbar(type) {
         let scrollbarWidth = 0;
-        let fixedElements =  [].slice.call(document.querySelectorAll('.'+this.options.fixedClass))
+        const fixedElements =  [].slice.call(document.querySelectorAll('.'+this.options.fixedClass))
         if (type === 'hide') {
             let fullWindowWidth = window.innerWidth;
             if (!fullWindowWidth) {
-                let documentElementRect = document.documentElement.getBoundingClientRect();
+                const documentElementRect = document.documentElement.getBoundingClientRect();
                 fullWindowWidth = documentElementRect.right - Math.abs(documentElementRect.left);
             }
             if (document.body.clientWidth < fullWindowWidth || this.isAppleDevice) {
-                let paddingRight = parseInt(window.getComputedStyle(document.body).paddingRight || 0, 10);
+                const paddingRight = parseInt(window.getComputedStyle(document.body).paddingRight || 0, 10);
                 scrollbarWidth = this.getScrollbarWidth();
                 document.body.dataset.originalPaddingRight = paddingRight;
                 if (scrollbarWidth > 0 || (scrollbarWidth == 0 && this.isAppleDevice)) {
@@ -440,7 +442,7 @@ class SimpleLightbox {
         }
 
         this.isClosing = true;
-        let element = this.relatedElements[this.currentImageIndex];
+        const element = this.relatedElements[this.currentImageIndex];
         element.dispatchEvent(new Event('close.simplelightbox'));
 
         if (this.options.history) {
@@ -479,7 +481,7 @@ class SimpleLightbox {
         this.isAnimating = false;
 
         // reset touchcontrol coordinates
-        for (let key in this.controlCoordinates) {
+        for (const key in this.controlCoordinates) {
             this.controlCoordinates[key] = 0;
         }
         this.controlCoordinates.mousedown = false;
@@ -494,7 +496,7 @@ class SimpleLightbox {
     }
 
     preload() {
-        let index = this.currentImageIndex,
+        const index = this.currentImageIndex,
             length = this.relatedElements.length,
             next = (index + 1 < 0) ? length - 1 : (index + 1 >= length - 1) ? 0 : index + 1,
             prev = (index - 1 < 0) ? length - 1 : (index - 1 >= length - 1) ? 0 : index - 1,
@@ -502,7 +504,7 @@ class SimpleLightbox {
             prevImage = new Image();
 
         nextImage.addEventListener('load', (event) => {
-            let src = event.target.getAttribute('src');
+            const src = event.target.getAttribute('src');
             if (this.loadedImages.indexOf(src) === -1) { //is this condition even required... setting multiple times will not change usage...
                 this.loadedImages.push(src);
             }
@@ -511,7 +513,7 @@ class SimpleLightbox {
         nextImage.setAttribute('src', this.relatedElements[next].getAttribute(this.options.sourceAttr));
 
         prevImage.addEventListener('load', (event) => {
-            let src = event.target.getAttribute('src');
+            const src = event.target.getAttribute('src');
             if (this.loadedImages.indexOf(src) === -1) {
                 this.loadedImages.push(src);
             }
@@ -521,7 +523,7 @@ class SimpleLightbox {
     }
 
     loadImage(direction) {
-        let slideDirection = direction;
+        const slideDirection = direction;
         if(this.options.rtl) {
             direction = -direction;
         }
@@ -529,7 +531,7 @@ class SimpleLightbox {
         this.relatedElements[this.currentImageIndex].dispatchEvent(new Event('change.' + this.eventNamespace));
         this.relatedElements[this.currentImageIndex].dispatchEvent(new Event((direction === 1 ? 'next' : 'prev') + '.' + this.eventNamespace));
 
-        let newIndex = this.currentImageIndex + direction;
+        const newIndex = this.currentImageIndex + direction;
 
         if (this.isAnimating || (newIndex < 0 || newIndex >= this.relatedElements.length) && this.options.loop === false) {
             return false;
@@ -547,7 +549,7 @@ class SimpleLightbox {
             this.isAnimating = true;
             if(!this.isClosing) {
                 setTimeout(() => {
-                    let element = this.relatedElements[this.currentImageIndex];
+                    const element = this.relatedElements[this.currentImageIndex];
                     if(!this.currentImage) return;
                     this.currentImage.setAttribute('src', element.getAttribute(this.options.sourceAttr));
 
@@ -573,7 +575,7 @@ class SimpleLightbox {
             return false;
         }
 
-        let tmpImage = new Image(),
+        const tmpImage = new Image(),
             windowWidth = window.innerWidth * this.options.widthRatio,
             windowHeight = window.innerHeight * this.options.heightRatio;
 
@@ -584,13 +586,13 @@ class SimpleLightbox {
         this.currentImage.dataset.translateY = 0;
         this.zoomPanElement(0, 0, 1);
 
-        tmpImage.addEventListener('error', (event) => {
+        tmpImage.addEventListener('error', (/*event*/) => {
             this.relatedElements[this.currentImageIndex].dispatchEvent(new Event('error.' + this.eventNamespace));
             this.isAnimating = false;
             this.isOpen = true;
             this.domNodes.spinner.style.display = 'none';
 
-            let dirIsDefined = direction === 1 || direction === -1;
+            const dirIsDefined = direction === 1 || direction === -1;
             if (this.initialImageIndex === this.currentImageIndex && dirIsDefined) {
                 return this.close();
             }
@@ -622,7 +624,7 @@ class SimpleLightbox {
                 imageHeight = event.target.height;
 
             if (this.options.scaleImageToRatio || imageWidth > windowWidth || imageHeight > windowHeight) {
-                let ratio = imageWidth / imageHeight > windowWidth / windowHeight ? imageWidth / windowWidth : imageHeight / windowHeight;
+                const ratio = imageWidth / imageHeight > windowWidth / windowHeight ? imageWidth / windowWidth : imageHeight / windowHeight;
                 imageWidth /= ratio;
                 imageHeight /= ratio;
             }
@@ -745,7 +747,7 @@ class SimpleLightbox {
     addEvents() {
 
         // resize/responsive
-        this.addEventListener(window, 'resize.' + this.eventNamespace, (event) => {
+        this.addEventListener(window, 'resize.' + this.eventNamespace, (/*event*/) => {
             //this.adjustImage.bind(this)
             if (this.isOpen) {
                 this.adjustImage();
@@ -756,7 +758,7 @@ class SimpleLightbox {
 
         if (this.options.history) {
             setTimeout(() => {
-                this.addEventListener(window, 'hashchange.' + this.eventNamespace, (event) => {
+                this.addEventListener(window, 'hashchange.' + this.eventNamespace, (/*event*/) => {
                     if (this.isOpen) {
                         this.hashchangeHandler();
                     }
@@ -807,7 +809,7 @@ class SimpleLightbox {
 
                 this.controlCoordinates.targetScale = scale;
 
-                let scrollTopPos = document.documentElement.scrollTop || document.body.scrollTop;
+                const scrollTopPos = document.documentElement.scrollTop || document.body.scrollTop;
 
                 this.controlCoordinates.pinchOffsetX = event.pageX;
                 this.controlCoordinates.pinchOffsetY = event.pageY - scrollTopPos || 0; // need to subtract the scroll position
@@ -1151,7 +1153,7 @@ class SimpleLightbox {
     }
 
     getDimensions(element) {
-        let styles = window.getComputedStyle(element),
+        const styles = window.getComputedStyle(element),
             height = element.offsetHeight,
             width = element.offsetWidth,
             borderTopWidth = parseFloat(styles.borderTopWidth),
@@ -1169,7 +1171,7 @@ class SimpleLightbox {
     }
 
     updateHash() {
-        let newHash = 'pid=' + (this.currentImageIndex + 1),
+        const newHash = 'pid=' + (this.currentImageIndex + 1),
             newURL = window.location.href.split('#')[0] + '#' + newHash;
 
         this.hashReseted = false;
@@ -1290,7 +1292,7 @@ class SimpleLightbox {
 
         this.currentImageIndex = this.relatedElements.indexOf(element);
 
-        let targetURL = element.getAttribute(this.options.sourceAttr);
+        const targetURL = element.getAttribute(this.options.sourceAttr);
 
         this.currentImage = document.createElement('img');
         this.currentImage.style.display = 'none';
@@ -1342,14 +1344,14 @@ class SimpleLightbox {
         elements = this.wrap(elements);
         events = this.wrap(events);
 
-        for (let element of elements) {
+        for (const element of elements) {
             if (!element.namespaces) {
                 element.namespaces = {};
             } // save the namespaces addEventListener the DOM element itself
 
-            for (let event of events) {
+            for (const event of events) {
                 let options = opts || false;
-                let needsPassiveFix = ['touchstart', 'touchmove','mousewheel','DOMMouseScroll'].indexOf(event.split('.')[0]) >= 0;
+                const needsPassiveFix = ['touchstart', 'touchmove','mousewheel','DOMMouseScroll'].indexOf(event.split('.')[0]) >= 0;
                 if (needsPassiveFix && this.isPassiveEventsSupported) {
                     if (typeof options === 'object') {
                         options.passive = true;
@@ -1367,8 +1369,8 @@ class SimpleLightbox {
     removeEventListener(elements, events) {
         elements = this.wrap(elements);
         events = this.wrap(events);
-        for (let element of elements) {
-            for (let event of events) {
+        for (const element of elements) {
+            for (const event of events) {
                 if(element.namespaces && element.namespaces[event]) {
                     element.removeEventListener(event.split('.')[0], element.namespaces[event]);
                     delete element.namespaces[event];
@@ -1379,24 +1381,24 @@ class SimpleLightbox {
 
     fadeOut(elements, duration, callback) {
         elements = this.wrap(elements);
-        for (let element of elements) {
+        for (const element of elements) {
             element.style.opacity = parseFloat(element) || window.getComputedStyle(element).getPropertyValue("opacity");
         }
 
         this.isFadeIn = false;
 
-        let step = 16.66666 / (duration || this.options.fadeSpeed),
+        const step = 16.66666 / (duration || this.options.fadeSpeed),
             fade = () => {
                 let currentOpacity = parseFloat(elements[0].style.opacity);
                 if ((currentOpacity -= step) < 0) {
-                    for (let element of elements) {
+                    for (const element of elements) {
                         element.style.display = "none";
                         // element.style.opacity = '';
                         element.style.opacity = 1;
                     }
                     callback && callback.call(this, elements);
                 } else {
-                    for (let element of elements) {
+                    for (const element of elements) {
                         element.style.opacity = currentOpacity;
                     }
                     requestAnimationFrame(fade);
@@ -1408,7 +1410,7 @@ class SimpleLightbox {
 
     fadeIn(elements, duration, callback, display) {
         elements = this.wrap(elements);
-        for (let element of elements) {
+        for (const element of elements) {
             if(element) {
                 element.style.opacity = 0;
                 element.style.display = display || "block";
@@ -1417,12 +1419,12 @@ class SimpleLightbox {
 
         this.isFadeIn = true;
 
-        let opacityTarget = parseFloat(elements[0].dataset.opacityTarget || 1),
+        const opacityTarget = parseFloat(elements[0].dataset.opacityTarget || 1),
             step = (16.66666 * opacityTarget) / (duration || this.options.fadeSpeed),
             fade = () => {
                 let currentOpacity = parseFloat(elements[0].style.opacity);
                 if (!((currentOpacity += step) > opacityTarget)) {
-                    for (let element of elements) {
+                    for (const element of elements) {
                         if(element) {
                             element.style.opacity = currentOpacity;
                         }
@@ -1430,7 +1432,7 @@ class SimpleLightbox {
                     if(!this.isFadeIn) return;
                     requestAnimationFrame(fade);
                 } else {
-                    for (let element of elements) {
+                    for (const element of elements) {
                         if(element) {
                             element.style.opacity = opacityTarget;
                         }
@@ -1444,7 +1446,7 @@ class SimpleLightbox {
 
     hide(elements) {
         elements = this.wrap(elements);
-        for (let element of elements) {
+        for (const element of elements) {
             if(element.style.display != 'none') {
                 element.dataset.initialDisplay = element.style.display;
             }
@@ -1454,7 +1456,7 @@ class SimpleLightbox {
 
     show(elements, display) {
         elements = this.wrap(elements);
-        for (let element of elements) {
+        for (const element of elements) {
             element.style.display = element.dataset.initialDisplay || display || 'block';
         }
     }
@@ -1465,11 +1467,11 @@ class SimpleLightbox {
 
     on(events, callback) {
         events = this.wrap(events);
-        for (let element of this.elements) {
+        for (const element of this.elements) {
             if (!element.fullyNamespacedEvents) {
                 element.fullyNamespacedEvents = {};
             }
-            for (let event of events) {
+            for (const event of events) {
                 element.fullyNamespacedEvents[event] = callback;
                 element.addEventListener(event, callback);
             }
@@ -1479,8 +1481,8 @@ class SimpleLightbox {
 
     off(events) {
         events = this.wrap(events);
-        for (let element of this.elements) {
-            for (let event of events) {
+        for (const element of this.elements) {
+            for (const event of events) {
                 if (typeof element.fullyNamespacedEvents !== 'undefined' && event in element.fullyNamespacedEvents) {
                     element.removeEventListener(event, element.fullyNamespacedEvents[event]);
                 }
@@ -1506,7 +1508,7 @@ class SimpleLightbox {
     }
 
     openPosition(position) {
-        let elem = this.elements[position];
+        const elem = this.elements[position];
         this.open(elem, position)
     }
     next() {
@@ -1575,7 +1577,7 @@ class SimpleLightbox {
             throw 'refreshing only works when you initialize using a selector!';
         }
 
-        let options = this.options,
+        const options = this.options,
             selector = this.initialSelector;
 
         this.destroy();
@@ -1586,5 +1588,3 @@ class SimpleLightbox {
     }
 }
 export default SimpleLightbox;
-
-global.SimpleLightbox = SimpleLightbox;
