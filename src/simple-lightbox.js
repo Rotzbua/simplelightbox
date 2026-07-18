@@ -1292,9 +1292,17 @@ class SimpleLightbox {
 
         let targetURL = element.getAttribute(this.options.sourceAttr);
 
-        this.currentImage = document.createElement('img');
+        let pictureElement = document.createElement('picture');
+        let imageElement = document.createElement('img');
+        let imageElement1 = document.createElement('source');
+        pictureElement.appendChild(imageElement1);
+        pictureElement.appendChild(imageElement);
+        this.currentImage = imageElement;
+        
         this.currentImage.style.display = 'none';
         this.currentImage.setAttribute('src', targetURL);
+        imageElement1.setAttribute('srcset', targetURL+'.webp');
+        imageElement1.setAttribute('type', 'image/webp');
         this.currentImage.dataset.scale = 1;
         this.currentImage.dataset.translateX = 0;
         this.currentImage.dataset.translateY = 0;
@@ -1306,7 +1314,7 @@ class SimpleLightbox {
         this.domNodes.image.innerHTML = '';
         this.domNodes.image.setAttribute('style', '');
 
-        this.domNodes.image.appendChild(this.currentImage);
+        this.domNodes.image.appendChild(pictureElement);
 
 
         this.fadeIn(this.domNodes.overlay, this.options.fadeSpeed);
